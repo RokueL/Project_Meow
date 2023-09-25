@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     float slopeDownAngle;
     float slopeSideAngle;
     float lastSlopeAngle;
-    float groundCheckRadius;
+    float groundCheckRadius = 1f;
     float h;
 
 
@@ -42,7 +42,6 @@ public class PlayerController : MonoBehaviour
         cc = GetComponent<CapsuleCollider2D>();
 
         colliderSize = cc.size;
-        groundLayer = LayerMask.GetMask("Ground");
     }
 
     void Start()
@@ -82,7 +81,8 @@ public class PlayerController : MonoBehaviour
 
     void CheckGround()
     {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius);
+        groundLayer = LayerMask.GetMask("Ground");
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
         if (rb.velocity.y <= 0.0f)
         {
@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
 
     void MoveMent()
     {
-        if (isGrounded && !isOnSlope && !isJumping) //if not on slope
+        if (isGrounded && !isOnSlope && !isJumping) // 경사로 아닐 때
         {
             playerVec.Set(stats.Speed * h, 0.0f);
             rb.velocity = playerVec;
